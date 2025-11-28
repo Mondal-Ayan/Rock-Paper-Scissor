@@ -1,100 +1,220 @@
-/* styles.css */
-/* universal selector - Applies to whole document */
+:root{
+  /* Color palette (deep navy background, teal accents, coral highlights) */
+  --bg-1: #071733; /* deep navy */
+  --bg-2: #0b2b4a; /* layered navy */
+  --glass: rgba(255,255,255,0.06);
+  --accent: #23d5ab; /* teal */
+  --accent-2: #ff6b6b; /* coral */
+  --muted: rgba(255,255,255,0.85);
+  --glass-border: rgba(255,255,255,0.08);
+  --shadow: 0 8px 24px rgba(2,6,23,0.6);
+}
+
+/* universal reset (avoid forcing background on every element) */
 *{
     padding: 0;
     margin: 0;
     box-sizing: border-box;
-    background: #082c6c;
-    color: #fff;
+    color: var(--muted);
+    font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
 }
+
+html,body{
+  height: 100%;
+  background: radial-gradient(1200px 600px at 10% 10%, rgba(35,213,171,0.06), transparent 10%),
+              radial-gradient(900px 400px at 90% 90%, rgba(255,107,107,0.04), transparent 10%),
+              linear-gradient(180deg, var(--bg-1), var(--bg-2));
+}
+
 /* To center everything in game */
 .game{
     display: flex;
     flex-direction: column;
-    height: 100vh;
+    min-height: 100vh;
     width: 100vw;
     justify-content: center;
     align-items: center;
+    padding: 3rem 1rem;
 }
 
 /* Title of the game */
 .title{
     position: absolute;
-    top: 0;
-    font-size: 4rem;
+    top: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: clamp(2rem, 4vw, 4rem);
     z-index: 2;
+    letter-spacing: 1px;
+    color: white;
+    text-shadow: 0 6px 24px rgba(2,6,23,0.6);
 }
 
 /* Score Board */
 .score{
     display: flex;
-    width: 30vw;
-    justify-content: space-evenly;
+    width: min(520px, 90%);
+    justify-content: space-between;
     position: absolute;
-    top: 70px;
+    top: 100px;
     z-index: 1;
+    gap: 1rem;
+    backdrop-filter: blur(6px) saturate(120%);
+    background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));
+    border: 1px solid var(--glass-border);
+    padding: 0.6rem 1rem;
+    border-radius: 14px;
+    box-shadow: var(--shadow);
+}
+
+.score > div{
+  flex: 1 1 50%;
 }
 
 /* Score  */
 .p-count,.c-count{
     text-align: center;
-    font-size: 1.5rem;
-    margin-top: 1rem;
+    font-size: 1.1rem;
+    margin-top: 0.6rem;
+    color: var(--muted);
+}
+
+.score .label{
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: rgba(255,255,255,0.9);
 }
 
 /* displaying three buttons in one line */
 .options{
     display: flex;
-    width: 50vw;
+    width: min(760px, 90%);
     justify-content: space-evenly;
-    margin-top: 2rem;
+    margin-top: 2.8rem;
+    gap: 1rem;
 }
 
 /* Styling on all three buttons */
 .rock, .paper, .scissor{
-    padding: 0.8rem;
-    width: 100px;
-    border-radius: 10px;
-    background: green;
+    padding: 1rem 1.2rem;
+    width: 130px;
+    height: 130px;
+    border-radius: 16px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
     outline: none;
-    border-color: green;
-    border: none;
+    border: 1px solid var(--glass-border);
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    transition: transform 220ms cubic-bezier(.2,.9,.2,1), box-shadow 220ms, border-color 220ms;
+    box-shadow: 0 12px 30px rgba(2,6,23,0.45);
+    backdrop-filter: blur(6px);
+}
+
+/* individual accent colours for buttons (kept subtle) */
+.rock{ --btn-accent: #ffb86b; }
+.paper{ --btn-accent: #23d5ab; }
+.scissor{ --btn-accent: #8a7fff; }
+
+.rock::before, .paper::before, .scissor::before{
+  content: '';
+  width: 70%;
+  height: 40%;
+  border-radius: 10px;
+  background: linear-gradient(90deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+  box-shadow: inset 0 2px 10px rgba(255,255,255,0.02);
+  margin-bottom: 0.6rem;
 }
 
 .move{
-    font-size: 2rem;
-    font-weight: bold;
+    font-size: 1.25rem;
+    font-weight: 700;
+    letter-spacing: 0.6px;
+    color: var(--muted);
 }
 
-/* Reload button style */
+.rock:hover, .paper:hover, .scissor:hover{
+    transform: translateY(-8px) scale(1.02);
+    border-color: rgba(255,255,255,0.14);
+}
+
+/* accent ring when active or selected */
+.rock:active, .paper:active, .scissor:active{
+  transform: translateY(-2px) scale(0.99);
+  box-shadow: 0 18px 40px rgba(2,6,23,0.55);
+}
+
+.rock[data-variant] , .paper[data-variant], .scissor[data-variant]{
+  border-image-slice: 1;
+}
+
+/* reload button style */
 .reload {
-    display: none;
+    display: inline-block;
     margin-top: 2rem;
-    padding: 1rem;
-    background: green;
+    padding: 0.9rem 1.2rem;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    color: white;
     outline: none;
     border: none;
-    border-radius: 10px;
+    border-radius: 12px;
     cursor: pointer;
+    font-weight: 700;
+    letter-spacing: 0.4px;
+    box-shadow: 0 14px 32px rgba(34,50,60,0.3);
+    transition: transform 180ms ease, box-shadow 180ms ease, opacity 180ms ease;
+}
+
+.reload:hover{
+  transform: translateY(-6px);
+  box-shadow: 0 28px 48px rgba(35,213,171,0.12);
 }
 
 .result{
     margin-top: 20px;
-    font-size: 1.2rem;
+    font-size: 1.1rem;
+    padding: 0.6rem 1rem;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.03);
+}
+
+/* small glowing highlight for winners */
+.result.win{
+  color: white;
+  text-shadow: 0 10px 30px rgba(35,213,171,0.12);
 }
 
 /* Responsive Design */
-@media screen and (max-width: 612px)
-{  
+@media screen and (max-width: 612px){
     .title{
         text-align: center;
+        top: 16px;
     }
     .score{
         position: absolute;
-        top: 200px;
-        width: 100vw;
+        top: 180px;
+        width: calc(100% - 32px);
+        left: 16px;
+        right: 16px;
     }
     .options{
-        width: 100vw;
+        width: 100%;
+        flex-direction: row;
+        gap: 0.6rem;
     }
+    .rock, .paper, .scissor{
+      width: 92px;
+      height: 92px;
+      padding: 0.6rem;
+      border-radius: 12px;
+    }
+}
+
+/* small accessible focus styles */
+.rock:focus, .paper:focus, .scissor:focus, .reload:focus{
+  outline: 3px solid rgba(35,213,171,0.18);
+  outline-offset: 3px;
+}
